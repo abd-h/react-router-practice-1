@@ -2,18 +2,22 @@ import React from 'react';
 import EventForm from '../components/EventForm'
 import EventItem from '../components/EventItem';
 import { json, redirect, useRouteLoaderData } from 'react-router';
+import EventsList from '../components/EventsList';
 
 const EventDetailPage = () => {
     const event = useRouteLoaderData('event-id');
+    const events = useRouteLoaderData('event-detail')
 
     
 
     console.log(event);
+    console.log(events);
 
     return (
       <>
         <h1>EventDetailPage</h1>
-        <EventItem event={event} method='patch' />
+            <EventItem event={ event } method='patch' />
+            <EventsList events={events} />
       </>
     );
 }
