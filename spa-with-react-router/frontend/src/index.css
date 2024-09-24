@@ -48,3 +48,13 @@ ul {
   margin: 0;
   padding: 0;
 }
+
+main {
+  text-align: center;
+}
+
+form label {
+  text-align: left;
+  font-weight: 900;
+}
+ 
