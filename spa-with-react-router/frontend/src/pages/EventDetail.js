@@ -58,7 +58,7 @@ export const action = async ({ request, params }) => {
     body: JSON.stringify(eventData),
   });
 
-  if (response.status === 422 || response.status === 401) {
+  if (response.status === 422) {
     return response;
   }
 
