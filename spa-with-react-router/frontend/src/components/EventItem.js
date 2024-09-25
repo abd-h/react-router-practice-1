@@ -3,9 +3,8 @@ import classes from './EventItem.module.css';
 
 function EventItem({ event }) {
   const submit = useSubmit();
-  const events = useActionData();
-  console.log(events);
-
+ 
+console.log(event);
   function startDeleteHandler() {
     // ...
     const proceed = window.confirm('Are you sure you want to delete Event?');

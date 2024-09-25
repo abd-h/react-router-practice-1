@@ -1,30 +1,40 @@
-import React from 'react';
-import { json, redirect, useRouteLoaderData } from 'react-router';
+import React, { Suspense} from 'react';
+import { json, redirect, useRouteLoaderData, defer, Await } from 'react-router';
 
 import EventsList from '../components/EventsList';
+import { eventsLoader } from './EventsLoader';
 
 const EventsPage = () => {
-  const events = useRouteLoaderData('event-detail');
+  const {events} = useRouteLoaderData('event-detail');
 
 
   return (
-    <>
-      <EventsList events={events} />
-    </>
+   <>
+   <Suspense fallback={<p>Not aveilable yet</p>}>
+     <Await resolve={events}>
+       {(loadedEvent) => <EventsList events={loadedEvent} />}
+     </Await>
+   </Suspense>
+ </>
   );
 }
 
 export default EventsPage;
 
 export const loader = async ({ request, params }) => {
-  const response = await fetch('http://localhost:8080/events');
 
-  if (!response.ok) {
-    throw json({message: 'Events not Loaded'}, {status: 500})
-  } else {
-    const resData = await response.json();
-    return resData.events;
-  }
+  return defer({
+    events: eventsLoader()
+  })
+
+  // const response = await fetch('http://localhost:8080/events');
+
+  // if (!response.ok) {
+  //   throw json({message: 'Events not Loaded'}, {status: 500})
+  // } else {
+  //   const resData = await response.json();
+  //   return resData.events;
+  // }
 }
 
 // delete event
@@ -46,3 +56,4 @@ export const action = async ({ request, params }) => {
   return redirect('/events')
 }
 
+ 

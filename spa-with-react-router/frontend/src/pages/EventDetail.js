@@ -1,40 +1,52 @@
-import React from 'react';
-import EventForm from '../components/EventForm'
-import EventItem from '../components/EventItem';
-import { json, redirect, useRouteLoaderData } from 'react-router';
-import EventsList from '../components/EventsList';
+import React, { Suspense } from "react";
+import EventForm from "../components/EventForm";
+import EventItem from "../components/EventItem";
+import { json, redirect, useRouteLoaderData, defer, Await } from "react-router";
+import EventsList from "../components/EventsList";
+import { eventLoader, eventsLoader } from "./EventsLoader";
 
 const EventDetailPage = () => {
-    const event = useRouteLoaderData('event-id');
-    const events = useRouteLoaderData('event-detail')
+  const {event} = useRouteLoaderData("event-id");
+  const {events} = useRouteLoaderData("event-detail");
 
-    
+  console.log(events);
+  console.log(event);
 
-    console.log(event);
-    console.log(events);
-
-    return (
-      <>
-        <h1>EventDetailPage</h1>
-            <EventItem event={ event } method='patch' />
-            <EventsList events={events} />
-      </>
-    );
-}
+  return (
+    <>
+      <Suspense fallback={<p>Not aveilable yet</p>}>
+        <Await resolve={event}>
+          {(loadedEvent) => <EventItem event={loadedEvent} />}
+        </Await>
+      </Suspense>
+      <Suspense fallback={<p>Not aveilable yet</p>}>
+        <Await resolve={events}>
+          {(loadedEvent) => <EventsList events={loadedEvent} />}
+        </Await>
+      </Suspense>
+    </>
+  );
+};
 
 export default EventDetailPage;
 
 export const loader = async ({ request, params }) => {
-    const eventId = params.eventId;
-    const response = await fetch('http://localhost:8080/events/' + eventId);
+  const eventId = params.eventId;
 
-    if (!response.ok) {
-        throw json({message: 'event not saved'}, {status: 500})
-    } else {
-        const resData = await response.json();
-        return resData.event;
-    }
-}
+    return defer({
+        events: await eventsLoader(),
+        event: eventLoader(eventId),
+  });
+
+  // const response = await fetch('http://localhost:8080/events/' + eventId);
+
+  // if (!response.ok) {
+  //     throw json({message: 'event not saved'}, {status: 500})
+  // } else {
+  //     const resData = await response.json();
+  //     return resData.event;
+  // }
+};
 
 export const action = async ({ request, params }) => {
   const method = request.method;
@@ -72,6 +84,3 @@ export const action = async ({ request, params }) => {
 
   return redirect("/events");
 };
-
-
-
