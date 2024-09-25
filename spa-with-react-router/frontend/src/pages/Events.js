@@ -43,8 +43,6 @@ export const action = async ({ request, params }) => {
   const method = request.method;
   const eventId = params.eventId;
 
-  console.log(method);
-
   const response = await fetch('http://localhost:8080/events/' + eventId, {
     method: method,
   });

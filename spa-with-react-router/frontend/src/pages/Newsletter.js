@@ -3,11 +3,12 @@ import NewsletterSignup from "../components/NewsletterSignup";
 import PageContent from "../components/PageContent";
 
 function NewsletterPage() {
-    
+    const email = useActionData();
+    console.log(email);
     
   return (
     <PageContent title="Join our awesome newsletter!">
-      <NewsletterSignup />
+          <NewsletterSignup email={ email} />
     </PageContent>
   );
 }

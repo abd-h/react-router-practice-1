@@ -9,9 +9,6 @@ const EventDetailPage = () => {
   const {event} = useRouteLoaderData("event-id");
   const {events} = useRouteLoaderData("event-detail");
 
-  console.log(events);
-  console.log(event);
-
   return (
     <>
       <Suspense fallback={<p>Not aveilable yet</p>}>

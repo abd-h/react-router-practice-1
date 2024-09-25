@@ -4,7 +4,7 @@ import { useRouteLoaderData, Await } from 'react-router';
 
 const EditEventPage = () => {
   const {event} = useRouteLoaderData('event-id');
-  console.log(event);
+
   return (
     <>
       <h1>EditEventPage</h1>
