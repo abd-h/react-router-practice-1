@@ -21,6 +21,9 @@ function NewsletterSignup() {
     >
       <input
         type="email"
+        id='newsletter-email'
+        autoComplete='on'
+        name='email'
         placeholder="Sign up for newsletter..."
         aria-label="Sign up for newsletter"
       />
