@@ -13,8 +13,7 @@ import { getAuthToken } from '../utility/auth';
 
 function EventDetailPage() {
   const { event, events } = useRouteLoaderData('event-detail');
-const token = getAuthToken();
-console.log(token);
+
   return (
     <>
       <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
@@ -81,7 +80,7 @@ export async function loader({ request, params }) {
 export async function action({ params, request }) {
   const eventId = params.eventId;
   const token = getAuthToken();
-  console.log(token);
+
   const response = await fetch('http://localhost:8080/events/' + eventId, {
     method: request.method,
     headers: {

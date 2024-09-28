@@ -38,6 +38,6 @@ export const checkAuthTokenLoader = () => {
     if (!token) {
         return redirect('/auth');
     }
-    // loader functions do not work as intended when you return undefined as result so therefor you must return null as final result. 
+    // loader functions do not work as intended when you return undefined as result so therefor you must return null as final result when you want nothing to happen after as result. 
     return null
 }
