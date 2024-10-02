@@ -8,9 +8,11 @@ export default function NewEventsSection() {
   const { data, isPending, isError, error, } = useQuery({
     queryKey: ['events'],
     queryFn: fetchEvents,
+    staleTime: 5000,
+    // gcTime:2000
   })
   
-  
+
 
   let content;
 
@@ -18,7 +20,7 @@ export default function NewEventsSection() {
     content = <LoadingIndicator />;
   }
 
-  if (error) {
+  if (isError) {
     content = (
       <ErrorBlock title="An error occurred" message={error.info?.message || "Failed to fetch events"} />
     );
