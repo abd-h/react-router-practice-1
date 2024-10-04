@@ -1,90 +1,42 @@
-
-export const fetchEvents = async ({ signal, searchTerm }) => {
-    let url = "http://localhost:3000/events";
+export const fetchEvents = async ({ signal, searchTerm, eventId }) => {
+    console.log(eventId);
+  
+    let url = 'http://localhost:3000/events';
     if (searchTerm) {
         url += `?search=${searchTerm}`;
     }
 
-    const response = await fetch(url, signal);
+    if (eventId) {
+        url = 'http://localhost:3000/events/' + eventId; 
+    }
+
+    const response = await fetch(url, signal)
+
     if (!response.ok) {
-        const error = new Error('An Error has occurred, could not fetch data!');
+        const error = new Error('An Error has occurred while fetching data!');
         error.code = error.status;
         error.info = await response.json();
         throw error;
-    }
-
+    };
     const { events } = await response.json();
     return events;
 }
 
-// export const fetchEvents = async ({ signal, searchTerm }) => {
-  
-//     let url = "http://localhost:3000/events";
-//     if (searchTerm) {
-//         url += '?search=' + searchTerm ;
-//     }
-//     const response = await fetch(url, signal);
-//     if (!response.ok) {
-//         const error = new Error("An error occurred whiled feching data!");
-//         error.code = error.status;
-//         error.info = await response.json();
-//         throw error;
-//     }
-//     const { events } = await response.json();
-//     return events;
+// export const eventDetail = async (eventId) => {
+
 // }
 
+export const deleteEvent = async (id) => {
+    const response = await fetch(`http://localhost:3000/events/${id}`, {
+      method: "DELETE",
+    });
 
-// export const fetchEvents = async({ signal, searchTerm }) => {
-//     let url = "http://localhost:3000/events";
-//     if (searchTerm) {
-//         url += "?search=" + searchTerm;
-//     }
+    if (!response.ok) {
+        const error = new Error('Could not delete event');
+        error.code = error.status;
+        error.info = await response.json();
+        throw error;
+    }
+    return response.json();
+}
 
-//     const response = await fetch(url, signal);
-//     if (!response.ok) {
-//         const error = new Error('An Error has occured while fetching data!');
-//         error.code = error.status;
-//         error.info = await response.json();
-//         throw error;
-//     }
-
-//     const { events } = await response.json();
-//     return events;
-// }
-
-// export const fetchEvents = async ({searchQuery}) => {
-//     let url = 'http://localhost:3000/events';
-//     if (searchQuery) {
-//         url = 'http://localhost:3000/events/' + `?search=${searchQuery}`;
-//     }
-//     log(url)
-//     const response = await fetch("http://localhost:3000/events");
-//     if (!response.ok) {
-//         const error = new Error('An error occurred whiled feching data!');
-//         error.code = error.status;
-//         error.info = await response.json();
-//         throw error;
-//     }
-
-//     const { events } = await response.json();
-
-//     return events;
-// }
-
-
-// export async function fetchEvents() {
-  
-//   const response = await fetch("http://localhost:3000/events");
-
-//   if (!response.ok) {
-//     const error = new Error("An error occurred while fetching the events");
-//     error.code = response.status;
-//     error.info = await response.json();
-//     throw error;
-//   }
-
-//   const { events } = await response.json();
-
-//   return events;
-// }

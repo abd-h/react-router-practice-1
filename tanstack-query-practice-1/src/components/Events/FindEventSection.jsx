@@ -1,3 +1,10 @@
+// import { useQuery } from "@tanstack/react-query";
+// import {  useState } from "react";
+// import { fetchEvents } from "../../util/http";
+// import LoadingIndicator from "../UI/LoadingIndicator";
+// import ErrorBlock from "../UI/ErrorBlock";
+// import EventItem from "./EventItem";
+
 import { useQuery } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { fetchEvents } from "../../util/http";
@@ -7,36 +14,38 @@ import EventItem from "./EventItem";
 
 export default function FindEventSection() {
   const searchElement = useRef();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState();
+
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["events", { search: searchTerm }],
-    queryFn: (({signal}) => fetchEvents({signal,searchTerm})),
+    queryKey: ["events", {search: searchTerm}],
+    queryFn: ({ signal }) => fetchEvents({ signal, searchTerm }),
+    enable: searchElement !== undefined
   });
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    setSearchTerm(searchElement.current.value);
-    enable: searchTerm !== undefined;
-  }
-
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      setSearchTerm(searchElement.current.value);
+    };
+console.log(searchElement);
   let content = <p>Please enter a search term and to find events</p>;
 
   if (isLoading) {
     content = <LoadingIndicator />;
   }
-
   if (isError) {
     content = (
       <ErrorBlock
-        title="An Error Occurred!"
-        message={error.info?.message || "Could not load events due to error!"}
+        title="An Error Occorred!"
+        message={
+          error.info?.message || "An Error has occurred couldnot fetch data!"
+        }
       />
     );
   }
 
   if (data) {
     content = (
-      <ul className="events-list">
+      <ul className='events-list'>
         {data.map((event) => (
           <li key={event.id}>
             <EventItem event={event} />{" "}
@@ -46,20 +55,56 @@ export default function FindEventSection() {
     );
   }
 
+  // const searchElement = useRef();
+  // const [searchTerm, setSearchTerm] = useState("");
+  // const { data, isLoading, isError, error } = useQuery({
+  //   queryKey: ["events", { search: searchTerm }],
+  //   queryFn: (({signal}) => fetchEvents({signal,searchTerm})),
+  // });
+
+  // function handleSubmit(event) {
+  //   event.preventDefault();
+  //   setSearchTerm(searchElement.current.value);
+  //   enable: searchTerm !== undefined;
+  // }
+
+  // let content = <p>Please enter a search term and to find events</p>;
+
+  // if (isLoading) {
+  //   content = <LoadingIndicator />;
+  // }
+
+  // if (isError) {
+  //   content = (
+  //     <ErrorBlock
+  //       title="An Error Occurred!"
+  //       message={error.info?.message || "Could not load events due to error!"}
+  //     />
+  //   );
+  // }
+
+  // if (data) {
+  //   content = (
+  //     <ul className="events-list">
+  //       {data.map((event) => (
+  //         <li key={event.id}>
+  //           <EventItem event={event} />{" "}
+  //         </li>
+  //       ))}
+  //     </ul>
+  //   );
+  // }
+
   return (
     <section className="content-section" id="all-events-section">
       <header>
         <h2>Find your next event!</h2>
         <form onSubmit={handleSubmit} id="search-form">
-          <input
-            type="search"
-            placeholder="Search events"
-            ref={searchElement}
-          />
+          <input type="search" placeholder="Search events" ref={searchElement} />
           <button>Search</button>
         </form>
       </header>
-      
+
       {content}
     </section>
   );
