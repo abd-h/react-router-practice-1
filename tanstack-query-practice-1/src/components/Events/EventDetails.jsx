@@ -2,7 +2,7 @@ import { Link, Outlet, useParams } from 'react-router-dom';
 
 import Header from '../Header.jsx';
 import { useQuery } from '@tanstack/react-query';
-import { fetchEvents } from '../../util/http.js';
+import { eventDetail } from '../../util/http.js';
 import LoadingIndicator from '../UI/LoadingIndicator.jsx';
 import ErrorBlock from '../UI/ErrorBlock.jsx';
 
@@ -11,7 +11,8 @@ export default function EventDetails() {
   
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['events', { 'event-ed': eventId }],
-    queryFn: ((signal) => fetchEvents({signal, eventId })),
+    queryFn: ((signal) => eventDetail({ signal, eventId })),
+    staleTime: 5000,
   });
 
   let content;
@@ -27,7 +28,7 @@ export default function EventDetails() {
   if (data) {
     content = data;
   }
-console.log(data);
+
   return (
     <>
       <Outlet />
@@ -38,22 +39,26 @@ console.log(data);
       </Header>
       <article id="event-details">
         <header>
-          <h1>EVENT TITLE</h1>
+          {data && <h1>{data.title} </h1>}
           <nav>
             <button>Delete</button>
             <Link to="edit">Edit</Link>
           </nav>
         </header>
-        <div id="event-details-content">
-          <img src="" alt="" />
-          <div id="event-details-info">
-            <div>
-              <p id="event-details-location">EVENT LOCATION</p>
-              <time dateTime={`Todo-DateT$Todo-Time`}>DATE @ TIME</time>
+        {data && (
+          <div id="event-details-content">
+            <img src={`http://localhost:3000/${data.image}`} alt={`${data.title}`} />
+            <div id="event-details-info">
+              <div>
+                <p id="event-details-location">{data.location}</p>
+                <time
+                  dateTime={`Todo-DateT$Todo-Time`}
+                >{`${data.date} @ ${data.time}`}</time>
+              </div>
+              <p id="event-details-description">{data.description} </p>
             </div>
-            <p id="event-details-description">EVENT DESCRIPTION</p>
           </div>
-        </div>
+        )}
       </article>
     </>
   );

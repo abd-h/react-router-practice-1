@@ -19,7 +19,7 @@ export default function FindEventSection() {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["events", {search: searchTerm}],
     queryFn: ({ signal }) => fetchEvents({ signal, searchTerm }),
-    enable: searchElement !== undefined
+    enabled: searchTerm !== undefined
   });
 
     const handleSubmit = (e) => {
@@ -42,7 +42,7 @@ console.log(searchElement);
       />
     );
   }
-
+console.log(data);
   if (data) {
     content = (
       <ul className='events-list'>
