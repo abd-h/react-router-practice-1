@@ -29,6 +29,9 @@ export default function EventDetails() {
     content = data;
   }
 
+  console.log(data);
+
+
   return (
     <>
       <Outlet />

@@ -1,3 +1,8 @@
+import { QueryClient } from "@tanstack/react-query";
+
+export const queryClient = new QueryClient();
+
+
 export const fetchEvents = async ({ signal, searchTerm, eventId }) => {
   let url = "http://localhost:3000/events";
   if (searchTerm) {
@@ -32,7 +37,8 @@ export const eventDetail = async ({ eventId }) => {
 
 // sending new event!
 export const createNewEvent = async (eventData) => {
-  const response = await fetch("http://localhost:3000/", {
+  console.log(eventData);
+  const response = await fetch("http://localhost:3000/events", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -62,3 +68,17 @@ export const deleteEvent = async (id) => {
   }
   return response.json();
 };
+
+
+export const fetchSelectableImages = async ({ signal }) => {
+  const response = await fetch('http://localhost:3000/events/images', signal);
+  if (!response.ok) {
+    const error = new Error('An error occurred!');
+    error.code = error.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const { images } = await response.json();
+  return images;
+}
