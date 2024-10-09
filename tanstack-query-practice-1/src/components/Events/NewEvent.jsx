@@ -20,7 +20,7 @@ export default function NewEvent() {
   });
 
   function handleSubmit(formData) {
-    console.log(formData.title);
+    
     mutate({ event: formData });
   }
 

@@ -3,7 +3,7 @@ import { QueryClient } from "@tanstack/react-query";
 export const queryClient = new QueryClient();
 
 
-export const fetchEvents = async ({ signal, searchTerm, eventId }) => {
+export const fetchEvents = async ({ signal, searchTerm}) => {
   let url = "http://localhost:3000/events";
   if (searchTerm) {
     url += `?search=${searchTerm}`;
@@ -54,6 +54,34 @@ export const createNewEvent = async (eventData) => {
   const { event } = await response.json();
   return event;
 };
+
+export const updatedEvent = async (eventId) => {
+  console.log(eventId);
+  console.log(eventId.event);
+  console.log(eventId.eventId.id);
+
+  const id = eventId.eventId.id;
+  const eventData = eventId.event;
+
+  const response = await fetch("http://localhost:3000/events/" + id, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(eventData),
+  });
+
+  if (!response.ok) {
+    const error = new Error('Could not send edited event data');
+    error.code = error.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const { event } = await response.json();
+
+  return event;
+}
 
 export const deleteEvent = async (id) => {
   const response = await fetch(`http://localhost:3000/events/${id}`, {
